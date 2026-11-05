@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyTools - Expense Tracker</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #101827;
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #16a34a;
+            color: white;
+            font-weight: bold;
+        }
+
+        .delete {
+            background: #dc2626;
+        }
+
+        .income {
+            color: #4ade80;
+        }
+
+        .expense {
+            color: #f87171;
+        }
+
+        .error {
+            color: #f87171;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>My Expense Tracker</h1>
+
+    <div class="transaction-item">
+        <h3>Total Income</h3>
+        <h2 class="income">
+            ₹{{ "%.2f"|format(income) }}
+        </h2>
+
+        <h3>Total Expense</h3>
+        <h2 class="expense">
+            ₹{{ "%.2f"|format(expenses) }}
+        </h2>
+
+        <h3>Total Balance</h3>
+        <h2>
+            ₹{{ "%.2f"|format(balance) }}
+        </h2>
+    </div>
+
+    <div class="card">
+        <h2>Add Transaction</h2>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST">
+
+            <input
+                type="text"
+                name="name"
+                placeholder="Transaction name"
+                required
+            >
+
+            <input
+                type="number"
+                name="amount"
+                placeholder="Enter amount"
+                min="0.01"
+                step="0.01"
+                required
+            >
+
+            <select name="category" required>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+            </select>
+
+            <button type="submit">
+                Add Transaction
+            </button>
+
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Transaction History</h2>
+
+        {% for item in transactions %}
+
+            <div class="card">
+
+                <h3>{{ item.name }}</h3>
+
+                {% if item.category == "income" %}
+                    <p class="income">
+                        + ₹{{ "%.2f"|format(item.amount) }}
+                    </p>
+                {% else %}
+                    <p class="expense">
+                        - ₹{{ "%.2f"|format(item.amount) }}
+                    </p>
+                {% endif %}
+
+                <small>{{ item.created_at }}</small>
+
+                <form
+                    method="POST"
+                    action="{{ url_for('delete_transaction', transaction_id=item.id) }}"
+                    onsubmit="return confirm('Delete this transaction?')"
+                >
+                    <button class="delete" type="submit">
+                        Delete Transaction
+                    </button>
+                </form>
+
+            </div>
+
+        {% else %}
+            <p>No transactions yet.</p>
+        {% endfor %}
+
+    </div>
+
+    <a href="/" style="color:white;">
+        Back to Home
+    </a>
+
+</div>
+
+</body>
+</html>

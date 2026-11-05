@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Marks Calculator | PyTools Studio</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #080d19;
+    color: white;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 35px auto;
+    background: #131e30;
+    border: 1px solid #293b52;
+    border-radius: 16px;
+    padding: 25px;
+}
+
+.logo {
+    color: #55e6a5;
+    font-size: 23px;
+    font-weight: bold;
+    text-align: center;
+}
+
+h1 {
+    text-align: center;
+    margin: 22px 0;
+}
+
+.subtitle {
+    text-align: center;
+    color: #aebaca;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    margin: 17px 0 8px;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #40516a;
+    background: #080d19;
+    color: white;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    margin-top: 25px;
+    padding: 15px;
+    background: #55e6a5;
+    color: #07130f;
+    border: none;
+    border-radius: 8px;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.result {
+    margin-top: 25px;
+    padding: 20px;
+    background: #0c2630;
+    border: 1px solid #55e6a5;
+    border-radius: 12px;
+}
+
+.result h2 {
+    color: #55e6a5;
+    margin-bottom: 15px;
+}
+
+.result p {
+    margin: 12px 0;
+}
+
+.error {
+    margin-top: 20px;
+    padding: 14px;
+    background: #45232b;
+    color: #ffaaaa;
+    border-radius: 8px;
+}
+
+.back {
+    display: block;
+    text-align: center;
+    margin-top: 25px;
+    color: #55e6a5;
+    text-decoration: none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo">PyTools Studio</div>
+
+<h1>Marks Calculator</h1>
+
+<p class="subtitle">
+Calculate your marks and percentage.
+</p>
+
+<form method="POST">
+
+<label>Student Name</label>
+<input type="text"
+name="student_name"
+placeholder="Enter your name"
+required>
+
+<label>English Marks</label>
+<input type="number" name="English"
+min="0" max="100" step="any" required>
+
+<label>Bengali Marks</label>
+<input type="number" name="Bengali"
+min="0" max="100" step="any" required>
+
+<label>Math Marks</label>
+<input type="number" name="Math"
+min="0" max="100" step="any" required>
+
+<label>Science Marks</label>
+<input type="number" name="Science"
+min="0" max="100" step="any" required>
+
+<label>History Marks</label>
+<input type="number" name="History"
+min="0" max="100" step="any" required>
+
+<button type="submit">
+Calculate Result
+</button>
+
+</form>
+
+{% if error %}
+<div class="error">
+{{ error }}
+</div>
+{% endif %}
+
+{% if result %}
+
+<div class="result">
+
+<h2>Student Result Card</h2>
+
+<p><b>Name:</b> {{ result.name }}</p>
+
+{% for subject in result.subjects %}
+<p>
+{{ subject }}:
+{{ result.marks[loop.index0] }}
+</p>
+{% endfor %}
+
+<hr>
+
+<p>
+<b>Total:</b>
+{{ result.total }} / 500
+</p>
+
+<p>
+<b>Percentage:</b>
+{{ "%.2f"|format(result.percentage) }}%
+</p>
+
+<p>
+<b>Grade:</b> {{ result.grade }}
+</p>
+
+<p>
+<b>Status:</b> {{ result.status }}
+</p>
+
+</div>
+
+{% endif %}
+
+<a href="/" class="back">
+← Back to Home
+</a>
+
+</div>
+
+</body>
+</html>
+

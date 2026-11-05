@@ -1,0 +1,7 @@
+expense.db
+*.db
+app_backup.py
+*_backup.html
+__pycache__/
+.env
+.venv/

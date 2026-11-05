@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Generator - PyNova Tools</title>
+
+    <style>
+        body {
+            background: #0b0f19;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: #111827;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        input {
+            width: 95%;
+            padding: 12px;
+            margin: 8px 0 15px;
+            border-radius: 7px;
+            border: none;
+        }
+
+        button {
+            background: #10b981;
+            color: #0b0f19;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        #invoice {
+            background: white;
+            color: black;
+            padding: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Invoice Generator</h2>
+
+    <label>Customer Name</label>
+    <input id="customer" placeholder="Enter customer name">
+
+    <label>Product Name</label>
+    <input id="product" placeholder="Enter product name">
+
+    <label>Amount (₹)</label>
+    <input id="amount" type="number" placeholder="Enter amount">
+
+    <button onclick="generateInvoice()">
+Generate Invoice</button>
+
+    <div id="invoice">
+
+        <h2>INVOICE</h2>
+
+        <p id="iNumber"></p>
+        <p id="iDate"></p>
+        <hr>
+
+        <p id="iCustomer"></p>
+        <p id="iProduct"></p>
+
+        <h3 id="iAmount"></h3>
+        <br><br>
+<button onclick="downloadInvoice()">
+    Download Invoice PDF
+</button>
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+function generateInvoice() {
+    let customer = document.getElementById("customer").value.trim();
+    let product = document.getElementById("product").value.trim();
+    let amount = document.getElementById("amount").value;
+
+    if (!customer || !product || amount === "" || Number(amount) <= 0) {
+        alert("Please fill all fields correctly!");
+        return;
+    }
+
+    let now = new Date();
+
+    let invoiceNumber = "INV-" + now.getFullYear() +
+        String(now.getMonth() + 1).padStart(2, "0") +
+        String(now.getDate()).padStart(2, "0") +
+        "-" + Math.floor(1000 + Math.random() * 9000);
+
+    document.getElementById("iNumber").textContent =
+        "Invoice Number: " + invoiceNumber;
+
+    document.getElementById("iDate").textContent =
+        "Date & Time: " + now.toLocaleString();
+
+    document.getElementById("iCustomer").textContent =
+        "Customer: " + customer;
+
+    document.getElementById("iProduct").textContent =
+        "Product: " + product;
+
+    document.getElementById("iAmount").textContent =
+        "Total: INR " + Number(amount).toFixed(2);
+
+    document.getElementById("invoice").style.display = "block";
+}
+
+function downloadInvoice() {
+    if (!window.jspdf) {
+        alert("PDF library not loaded!");
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.text("INVOICE", 20, 25);
+    doc.text(document.getElementById("iNumber").textContent, 20, 45);
+    doc.text(document.getElementById("iDate").textContent, 20, 55);
+    doc.text(document.getElementById("iCustomer").textContent, 20, 75);
+    doc.text(document.getElementById("iProduct").textContent, 20, 85);
+    doc.text(document.getElementById("iAmount").textContent, 20, 100);
+
+    doc.save("My-Invoice.pdf");
+}
+</script>
+</body>
+</html>
